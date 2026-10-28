@@ -1,0 +1,907 @@
+<!doctype html>
+<!--
+  Jose Lesso, portfolio v3.1 (October 2026).
+  One self-contained file: no frameworks, no build step, no trackers, no outside requests.
+  Icons: Feather Icons (MIT License, https://feathericons.com).
+  Tech icons: Devicon v2.16.0 (MIT License, Copyright (c) 2015 konpa, https://github.com/devicons/devicon),
+  copied into the sprite below with the brand fills removed so CSS can color them.
+-->
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Jose Lesso</title>
+<meta name="description" content="Jose Lesso, computer science student at Sacramento State, working toward backend and application security roles.">
+<meta name="theme-color" content="#0a0d13">
+<meta property="og:title" content="Jose Lesso">
+<meta property="og:description" content="Computer science student at Sacramento State, working toward backend and application security roles.">
+<meta property="og:type" content="website">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' fill='%230a0d13'/%3E%3Crect x='3' y='3' width='26' height='26' fill='none' stroke='%235ba4ff' stroke-width='2'/%3E%3Ctext x='16' y='20.5' font-family='monospace' font-size='11' font-weight='700' fill='%235ba4ff' text-anchor='middle'%3EJL%3C/text%3E%3C/svg%3E">
+<script>
+  // Hide scroll-in items only when they can be revealed again (motion allowed + IntersectionObserver).
+  // If the main script never runs, show everything after 2.5 s.
+  (function () {
+    var d = document.documentElement;
+    if (!matchMedia("(prefers-reduced-motion: reduce)").matches && "IntersectionObserver" in window) {
+      d.classList.add("anim");
+      setTimeout(function () { if (!window.__revealReady) d.classList.remove("anim"); }, 2500);
+    }
+  })();
+</script>
+<style>
+  :root {
+    --bg: #0a0d13;
+    --bg-2: #111622;
+    --bg-3: #161d2b;
+    --line: #232c3d;
+    --line-2: #33405a;
+    --text: #e7ecf3;
+    --muted: #a4aec0;
+    --dim: #8a95a8;
+    --blue: #5ba4ff;
+    --blue-l: #9cc8ff;
+    --blue-d: #3a6db3;
+    --blue-a: rgba(91, 164, 255, .12);
+    --warn: #ff8f8f;
+    --sans: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    --mono: ui-monospace, "SF Mono", "Cascadia Code", Menlo, Consolas, "Liberation Mono", monospace;
+    --pad: clamp(20px, 6vw, 60px);
+    --nav-h: 70px;
+    --ease: cubic-bezier(.2, .7, .2, 1);
+    color-scheme: dark;
+  }
+  *, *::before, *::after { box-sizing: border-box; }
+  html { -webkit-text-size-adjust: 100%; }
+  @media (prefers-reduced-motion: no-preference) { html { scroll-behavior: smooth; } }
+  body {
+    margin: 0;
+    background: var(--bg);
+    color: var(--muted);
+    font: 400 17px/1.6 var(--sans);
+    overflow-x: hidden;
+  }
+  a { color: inherit; text-decoration: none; }
+  :focus-visible { outline: 2px solid var(--blue); outline-offset: 3px; }
+  ::selection { background: rgba(91, 164, 255, .3); color: var(--text); }
+  code { font: .9em var(--mono); color: var(--blue-l); }
+  .mono { font-family: var(--mono); }
+  .sr {
+    position: absolute; width: 1px; height: 1px; margin: -1px; padding: 0;
+    overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; border: 0;
+  }
+  .skip {
+    position: absolute; left: 16px; top: -64px; z-index: 100;
+    padding: 10px 14px; background: var(--blue); color: #06101f;
+    font: 600 14px var(--mono);
+  }
+  .skip:focus { top: 16px; }
+
+  /* ---------- Background: soft blue glow at the top + a light that follows the mouse ---------- */
+  .bg {
+    position: absolute; top: 0; left: 0; right: 0; height: 120vh; z-index: -1; pointer-events: none;
+    background:
+      radial-gradient(55% 45% at 85% 8%, rgba(59, 130, 246, .16), transparent 70%),
+      radial-gradient(45% 40% at 5% 75%, rgba(99, 102, 241, .10), transparent 70%);
+  }
+  .glow {
+    position: fixed; inset: 0; z-index: -1; pointer-events: none; opacity: 0; transition: opacity .4s;
+    background: radial-gradient(600px circle at var(--mx, 50%) var(--my, 50%), rgba(91, 164, 255, .07), transparent 70%);
+  }
+  .glow.on { opacity: 1; }
+
+  .btn {
+    display: inline-flex; align-items: center; gap: 10px;
+    padding: 16px 26px; border: 1px solid var(--blue);
+    background: transparent; color: var(--blue);
+    font: 14px/1 var(--mono); cursor: pointer;
+    transition: background .2s, transform .2s var(--ease), box-shadow .2s var(--ease);
+  }
+  .btn:hover, .btn:focus-visible { background: var(--blue-a); transform: translate(-3px, -3px); box-shadow: 3px 3px 0 0 var(--blue); }
+  .btn svg { width: 16px; height: 16px; }
+  .btn-sm { padding: 10px 16px; font-size: 13px; }
+
+  /* ---------- Phone/tablet top bar (hidden once the side tabs fit) ---------- */
+  .nav {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 40;
+    height: var(--nav-h);
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 0 var(--pad);
+    background: rgba(10, 13, 19, .82);
+    -webkit-backdrop-filter: blur(10px); backdrop-filter: blur(10px);
+    transition: transform .3s var(--ease), box-shadow .3s;
+  }
+  .nav.scrolled { box-shadow: 0 10px 30px -12px rgba(0, 0, 0, .7); }
+  .nav.hide { transform: translateY(-100%); box-shadow: none; }
+  .logo {
+    display: grid; place-items: center; width: 40px; height: 40px;
+    border: 1.5px solid var(--blue); color: var(--blue);
+    font: 700 14px var(--mono); letter-spacing: .04em;
+  }
+  .menu-btn {
+    position: relative; z-index: 2;
+    width: 44px; height: 44px; padding: 0; border: 0;
+    background: transparent; color: var(--blue); cursor: pointer;
+  }
+  .menu-btn span, .menu-btn span::before, .menu-btn span::after {
+    position: absolute; height: 2px; background: currentColor;
+    transition: transform .25s var(--ease), top .25s var(--ease), background .2s;
+  }
+  .menu-btn span { left: 9px; right: 9px; top: 21px; }
+  .menu-btn span::before, .menu-btn span::after { content: ""; left: 0; right: 0; }
+  .menu-btn span::before { top: -8px; }
+  .menu-btn span::after { top: 8px; }
+  .menu-btn[aria-expanded="true"] span { background: transparent; }
+  .menu-btn[aria-expanded="true"] span::before { top: 0; transform: rotate(45deg); }
+  .menu-btn[aria-expanded="true"] span::after { top: 0; transform: rotate(-45deg); }
+  .drawer {
+    position: fixed; top: 0; right: 0; bottom: 0; z-index: 30;
+    width: min(78vw, 360px);
+    display: flex; flex-direction: column; justify-content: center; align-items: flex-start;
+    padding: 0 36px;
+    background: var(--bg-3); box-shadow: -10px 0 30px -15px rgba(0, 0, 0, .8);
+    transform: translateX(100%); visibility: hidden;
+    transition: transform .3s var(--ease), visibility 0s linear .3s;
+  }
+  .drawer.open { transform: none; visibility: visible; transition: transform .3s var(--ease); }
+  .drawer ol { list-style: none; margin: 0 0 32px; padding: 0; }
+  .drawer ol a {
+    display: flex; align-items: center; gap: 12px; padding: 11px 0;
+    font: 14px/1 var(--mono); letter-spacing: .12em; text-transform: uppercase; color: var(--muted);
+  }
+  .drawer .n { color: var(--dim); }
+  .drawer ol a.on { color: var(--text); }
+  .drawer ol a.on .n { color: var(--blue); }
+  body.menu-open { overflow: hidden; }
+  body.menu-open .nav { background: transparent; box-shadow: none; -webkit-backdrop-filter: none; backdrop-filter: none; }
+  body.menu-open .wrap, body.menu-open footer { filter: blur(4px) brightness(.7); }
+
+  /* ---------- Page grid: side tabs + content ---------- */
+  .wrap { display: grid; grid-template-columns: minmax(0, 1fr); padding: 0 var(--pad); }
+  main { min-width: 0; }
+  .rail { display: none; }
+
+  /* Side tabs: the active section's line pops out (from v2) */
+  .rail-top { display: flex; flex-direction: column; align-items: flex-start; }
+  .rail ol { list-style: none; margin: 0; padding: 0; }
+  .rail nav a {
+    display: flex; align-items: center; gap: 12px; padding: 9px 0;
+    font: 12px/1 var(--mono); letter-spacing: .12em; text-transform: uppercase; color: var(--muted);
+    transition: color .2s, transform .25s var(--ease);
+  }
+  .rail .ln { width: 24px; height: 1px; background: var(--dim); transition: width .25s var(--ease), background-color .25s, height .25s; }
+  .rail .n { color: var(--dim); transition: color .2s; }
+  .rail nav a:hover { color: var(--text); }
+  .rail nav a:hover .ln { width: 40px; background: var(--muted); }
+  .rail nav a.on { color: var(--text); transform: translateX(4px); }
+  .rail nav a.on .ln { width: 64px; height: 2px; background: var(--blue); }
+  .rail nav a.on .n { color: var(--blue); }
+  .rail-cv { margin-top: 30px; }
+  .rail-icons { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 2px; margin-left: -10px; }
+  .rail-icons a { display: grid; place-items: center; width: 40px; height: 40px; color: var(--muted); transition: color .2s, transform .2s var(--ease); }
+  .rail-icons a:hover, .rail-icons a:focus-visible { color: var(--blue); transform: translateY(-3px); }
+  .rail-icons svg { width: 20px; height: 20px; }
+
+  /* Laptop/PC: side tabs. Phone/tablet: top bar + menu. */
+  @media (min-width: 900px) {
+    .nav, .drawer { display: none; }
+    .wrap { grid-template-columns: 150px minmax(0, 940px); justify-content: center; column-gap: 44px; padding: 0 28px; }
+    .rail {
+      display: flex; flex-direction: column; justify-content: space-between;
+      position: sticky; top: 0; height: 100vh; height: 100svh; padding: 120px 0 40px;
+    }
+  }
+  @media (min-width: 1150px) {
+    .wrap { grid-template-columns: 190px minmax(0, 940px); column-gap: 72px; padding: 0 40px; }
+  }
+
+  section { scroll-margin-top: 40px; }
+  .sec { padding: 100px 0; }
+
+  /* ---------- Hero ---------- */
+  .hero { padding: 150px 0 70px; }
+  .hero-k { margin: 0 0 22px 2px; color: var(--blue); font: 15px var(--mono); }
+  .who { display: flex; align-items: center; gap: 20px; }
+  .avatar {
+    position: relative; flex: none; width: 76px; height: 76px; overflow: hidden;
+    border: 1px solid var(--line-2); background: var(--bg-2);
+    display: grid; place-items: center; font: 700 22px var(--mono); color: var(--blue);
+  }
+  .avatar img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+  .hero h1 { margin: 0; color: var(--text); font-size: clamp(40px, 7vw, 68px); line-height: 1.05; font-weight: 700; letter-spacing: -.02em; }
+  .hero-line { margin: 22px 0 0; color: var(--blue-l); font: 500 clamp(19px, 2.2vw, 24px)/1.3 var(--mono); }
+  .hero-p { max-width: 560px; margin: 18px 0 0; font-size: clamp(16px, 1.8vw, 18.5px); }
+  .hero-cta { display: flex; flex-wrap: wrap; gap: 16px; margin-top: 38px; }
+  @media (prefers-reduced-motion: no-preference) {
+    .hero > * { animation: rise .7s var(--ease) both; }
+    .hero > :nth-child(2) { animation-delay: .08s; }
+    .hero > :nth-child(3) { animation-delay: .16s; }
+    .hero > :nth-child(4) { animation-delay: .24s; }
+    .hero > :nth-child(5) { animation-delay: .32s; }
+    .rail { animation: fade .8s var(--ease) .3s both; }
+  }
+  @keyframes rise { from { opacity: 0; transform: translateY(18px); } to { opacity: 1; transform: none; } }
+  @keyframes fade { from { opacity: 0; } to { opacity: 1; } }
+
+  /* Section labels: // 01 PROJECTS (from v2) */
+  .sec-h {
+    display: flex; align-items: center; gap: 14px; margin: 0 0 48px;
+    color: var(--text); font: 700 15px/1.2 var(--mono); letter-spacing: .16em; text-transform: uppercase; white-space: nowrap;
+  }
+  .sec-h .c { color: var(--blue); letter-spacing: .06em; }
+  .sec-h::after { content: ""; flex: 1 1 auto; max-width: 420px; height: 1px; background: var(--line-2); }
+
+  /* ---------- Projects: diagram + text side by side, alternating ---------- */
+  /* Stacked (diagram on top) by default; side by side once the column is wide enough.
+     Browsers without container queries keep the stacked layout, which works at any width. */
+  .projects { list-style: none; margin: 0; padding: 0; container: projs / inline-size; }
+  .proj + .proj { margin-top: 80px; }
+  .proj-viz { container: viz / inline-size; margin-bottom: 22px; }
+  @container projs (min-width: 760px) {
+    .proj { display: grid; grid-template-columns: repeat(12, 1fr); column-gap: 32px; align-items: center; }
+    .proj + .proj { margin-top: 110px; }
+    .proj-viz { grid-column: 1 / 8; grid-row: 1; margin-bottom: 0; }
+    .proj-body { grid-column: 8 / -1; grid-row: 1; }
+    .proj:nth-child(even) .proj-viz { grid-column: 6 / -1; }
+    .proj:nth-child(even) .proj-body { grid-column: 1 / 6; }
+  }
+  @container projs (min-width: 880px) { .proj { column-gap: 44px; } }
+  .kicker { margin: 0 0 6px; color: var(--blue); font: 13px var(--mono); }
+  .proj-title { margin: 0 0 16px; color: var(--text); font-size: clamp(22px, 2.6vw, 27px); line-height: 1.2; }
+  .proj-title a { transition: color .2s; }
+  .proj-title a:hover { color: var(--blue); }
+  .proj-desc { margin: 0; font-size: 16.5px; }
+  .proj-tech { display: flex; flex-wrap: wrap; gap: 6px 16px; list-style: none; margin: 20px 0 0; padding: 0; font: 13px var(--mono); color: var(--dim); }
+  .proj-links { display: flex; align-items: center; gap: 8px; margin-top: 10px; }
+  .proj-links a { display: grid; place-items: center; width: 40px; height: 40px; margin-left: -10px; color: var(--text); transition: color .2s, transform .2s var(--ease); }
+  .proj-links a:hover, .proj-links a:focus-visible { color: var(--blue); transform: translateY(-2px); }
+  .proj-links svg { width: 21px; height: 21px; }
+  .private { display: inline-flex; align-items: center; gap: 8px; padding: 10px 0; font: 12.5px var(--mono); color: var(--dim); }
+  .private svg { width: 15px; height: 15px; }
+
+  /* Project diagrams ("how it works" panels).
+     Each diagram has a compact layout for narrow widths and a wide one, picked by the width of the
+     diagram itself (container queries), so labels always have room. Boxes wrap their text instead
+     of letting it run out. */
+  .viz {
+    position: relative; overflow: hidden;
+    display: flex; align-items: center; justify-content: center;
+    padding: 48px 14px 22px;
+    background-color: var(--bg-2);
+    background-image:
+      linear-gradient(rgba(91, 164, 255, .05) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(91, 164, 255, .05) 1px, transparent 1px);
+    background-size: 24px 24px;
+    border: 1px solid var(--line);
+    font: 11.5px/1.35 var(--mono); color: var(--muted);
+    transition: border-color .3s;
+  }
+  @container viz (min-width: 420px) {
+    .viz { min-height: 320px; padding: 52px 22px 28px; font-size: 12.5px; }
+  }
+  .proj:hover .viz { border-color: var(--blue-d); }
+  .viz-k { position: absolute; top: 14px; left: 18px; margin: 0; color: var(--dim); font-size: 11.5px; }
+  .viz .shot { position: absolute; inset: 0; z-index: 3; width: 100%; height: 100%; object-fit: cover; object-position: top left; }
+  /* Tilt toward the mouse (from v2) with a faint glare that follows the cursor */
+  .tilt { will-change: transform; }
+  @media (hover: hover) and (pointer: fine) {
+    .tilt::after {
+      content: ""; position: absolute; inset: 0; z-index: 4; pointer-events: none; opacity: 0; transition: opacity .3s;
+      background: radial-gradient(340px circle at var(--px, 50%) var(--py, 50%), rgba(91, 164, 255, .10), transparent 70%);
+    }
+    .tilt:hover::after { opacity: 1; }
+  }
+  .nd { position: relative; min-width: 0; padding: 8px 11px; border: 1px solid var(--line-2); background: var(--bg); color: var(--text); text-align: center; overflow-wrap: break-word; }
+  .nd small { display: block; margin-top: 2px; color: var(--dim); font-size: 10.5px; }
+  .nd .tag { color: var(--blue); }
+  .nd.hot { border-color: var(--blue); color: var(--blue-l); box-shadow: 0 0 0 4px var(--blue-a); }
+  .nd.ghost { border-style: dashed; background: transparent; color: var(--muted); }
+
+  /* Arrows. Sideways: the element is the line; its label sits above the line but still counts
+     toward the arrow's width, so the arrow can never get shorter than its label. */
+  .ar { position: relative; flex: 1 0 auto; min-width: 40px; height: 1px; background: var(--blue-d); }
+  .ar::after { content: ""; position: absolute; right: -1px; top: -4px; border-style: solid; border-width: 4.5px 0 4.5px 7px; border-color: transparent transparent transparent var(--blue-d); }
+  .ar > span {
+    display: block; height: 0; padding: 0 8px 0 4px;
+    color: var(--dim); font-size: 10.5px; line-height: 1.35; text-align: center; white-space: nowrap;
+    transform: translateY(calc(-1.35em - 5px));
+  }
+  /* Downward arrows (narrow layouts): the line runs down the middle, the label sits in the right half and may wrap */
+  .gw > .ar, .lab .ar {
+    flex: none; align-self: stretch; width: auto; min-width: 0; height: auto; min-height: 34px;
+    display: grid; grid-template-columns: 1fr 1fr; align-items: center; background: none;
+  }
+  .gw > .ar::before, .lab .ar::before { content: ""; position: absolute; left: 50%; top: 0; bottom: 0; width: 1px; background: var(--blue-d); }
+  .gw > .ar::after, .lab .ar::after { right: auto; top: auto; left: calc(50% - 4px); bottom: -1px; border-width: 7px 4.5px 0 4.5px; border-color: var(--blue-d) transparent transparent transparent; }
+  .gw > .ar > span, .lab .ar > span { grid-column: 2; height: auto; padding: 4px 0 6px 9px; text-align: left; white-space: normal; transform: none; }
+  .vl { position: relative; width: 1px; height: 26px; margin: 0 auto; background: var(--blue-d); }
+  .vl::after { content: ""; position: absolute; left: -4px; bottom: -1px; border-style: solid; border-width: 7px 4.5px 0 4.5px; border-color: var(--blue-d) transparent transparent transparent; }
+
+  /* Gateway: client -> gateway -> 4 services. Narrow: top to bottom, services in a 2x2 grid. */
+  .gw { display: flex; flex-direction: column; align-items: center; width: 100%; }
+  .gw > .nd { align-self: center; }
+  .fan { position: relative; display: grid; grid-template-columns: 1fr 1fr; gap: 10px; width: 100%; margin-top: 30px; }
+  .fan::before { content: ""; position: absolute; left: 25%; right: 25%; top: -15px; height: 1px; background: var(--blue-d); }
+  .fan::after { content: ""; position: absolute; left: 50%; top: -30px; width: 1px; height: 15px; background: var(--blue-d); }
+  .fan .nd:nth-child(-n+2)::before { content: ""; position: absolute; left: 50%; top: -16px; width: 1px; height: 15px; background: var(--blue-d); }
+  @container viz (min-width: 500px) {
+    .gw { flex-direction: row; max-width: 540px; }
+    .gw > .ar { display: block; flex: 1 0 auto; align-self: auto; min-width: 40px; height: 1px; min-height: 0; background: var(--blue-d); }
+    .gw > .ar::before { content: none; }
+    .gw > .ar::after { left: auto; right: -1px; top: -4px; bottom: auto; border-width: 4.5px 0 4.5px 7px; border-color: transparent transparent transparent var(--blue-d); }
+    .gw > .ar > span { height: 0; padding: 0 8px 0 4px; text-align: center; white-space: nowrap; transform: translateY(calc(-1.35em - 5px)); }
+    .fan { display: flex; flex-direction: column; width: auto; margin: 0 0 0 34px; padding-left: 18px; }
+    .fan::before { left: 0; right: auto; top: 24px; bottom: 24px; width: 1px; height: auto; }
+    .fan::after { left: -34px; top: 50%; width: 34px; height: 1px; }
+    .fan .nd { text-align: left; }
+    .fan .nd::before, .fan .nd:nth-child(-n+2)::before { content: ""; position: absolute; left: -19px; top: 50%; width: 18px; height: 1px; background: var(--blue-d); }
+  }
+
+  /* PoliScan: sources -> backend -> LLM check -> flag */
+  .ps { display: flex; flex-direction: column; align-items: center; width: 100%; max-width: 440px; }
+  .ps-row { display: flex; align-items: center; justify-content: center; gap: 12px; width: 100%; }
+  .ps-row > .nd { flex: 1 1 0; }
+  .ps-row > .ar { flex: 0 0 36px; min-width: 36px; }
+  .ps .wide { width: 100%; max-width: 340px; }
+
+  /* UDP: Go-Back-N window over a row of packets */
+  .udp { width: 100%; max-width: 460px; }
+  .pk { display: grid; grid-template-columns: repeat(12, 1fr); gap: 4px; }
+  .p { display: grid; place-items: center; aspect-ratio: 1; min-width: 0; border: 1px solid var(--line-2); color: var(--dim); font-size: 10px; font-style: normal; }
+  .p.a { border-color: var(--blue-d); background: var(--blue-a); color: var(--blue-l); }
+  .p.f { border-color: var(--blue); color: var(--text); }
+  .p.x { border: 1px dashed var(--warn); color: var(--warn); text-decoration: line-through; }
+  .win { position: relative; grid-row: 2; grid-column: 5 / 10; height: 10px; margin-top: 4px; border: 1px solid var(--blue); border-top: 0; }
+  .win > span { position: absolute; top: 14px; left: 50%; transform: translateX(-50%); color: var(--blue); font-size: 11px; white-space: nowrap; }
+  .udp-note { margin: 42px 0 0; color: var(--text); text-align: center; font-size: 12px; }
+  .udp-note b { color: var(--warn); font-weight: 400; }
+  .lg { display: flex; flex-wrap: wrap; justify-content: center; gap: 8px 16px; list-style: none; margin: 18px 0 0; padding: 0; color: var(--dim); font-size: 11px; }
+  .lg li { display: flex; align-items: center; gap: 6px; }
+  .lg .p { width: 12px; height: 12px; aspect-ratio: auto; }
+  @container viz (min-width: 420px) {
+    .pk { gap: 5px; }
+    .p { font-size: 11px; }
+  }
+
+  /* Homelab: a Proxmox box (the spare laptop) holding two services.
+     The dashed box is its own grid item behind the label and the two services, so it always
+     grows to fit them. Narrow: services side by side, arrows point down. Wide: arrows point right. */
+  .lab { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); column-gap: 12px; width: 100%; max-width: 460px; }
+  .host { grid-column: 1 / 3; grid-row: 1 / 3; border: 1px dashed var(--blue-d); }
+  .lab-k { grid-column: 1 / 3; grid-row: 1; margin: 0; padding: 9px 12px 10px; color: var(--blue); font-size: 11px; overflow-wrap: break-word; }
+  .lab .in { grid-row: 2; margin-bottom: 12px; }
+  .lab .in.r1 { grid-column: 1; margin-left: 12px; }
+  .lab .in.r2 { grid-column: 2; margin-right: 12px; }
+  .lab .ar { grid-row: 3; }
+  .lab .ar.r1, .lab .ghost.r1 { grid-column: 1; }
+  .lab .ar.r2, .lab .ghost.r2 { grid-column: 2; }
+  .lab .ghost { grid-row: 4; }
+  @container viz (min-width: 460px) {
+    .lab { grid-template-columns: auto 1fr auto; column-gap: 0; row-gap: 14px; }
+    .host { grid-column: 1; grid-row: 1 / 4; }
+    .lab-k { grid-column: 1; padding-bottom: 0; }
+    .lab .in { margin: 0 12px; }
+    .lab .in.r1 { grid-column: 1; grid-row: 2; }
+    .lab .in.r2 { grid-column: 1; grid-row: 3; margin-bottom: 12px; }
+    /* min-width stays auto so the grid column can't get narrower than the label */
+    .lab .ar { display: block; flex: none; align-self: center; min-width: auto; height: 1px; min-height: 0; margin: 0 8px 0 14px; background: var(--blue-d); }
+    .lab .ar::before { content: none; }
+    .lab .ar::after { left: auto; right: -1px; top: -4px; bottom: auto; border-width: 4.5px 0 4.5px 7px; border-color: transparent transparent transparent var(--blue-d); }
+    .lab .ar > span { min-width: 48px; height: 0; padding: 0 8px 0 4px; text-align: center; white-space: nowrap; transform: translateY(calc(-1.35em - 5px)); }
+    .lab .ar.r1, .lab .ghost.r1 { grid-row: 2; }
+    .lab .ar.r2, .lab .ghost.r2 { grid-row: 3; align-self: center; }
+    .lab .ar.r2 { margin-bottom: 12px; }
+    .lab .ghost.r2 { margin-bottom: 12px; }
+    .lab .ar.r1, .lab .ar.r2 { grid-column: 2; }
+    .lab .ghost.r1, .lab .ghost.r2 { grid-column: 3; }
+  }
+
+  /* ---------- Skills: icon tiles that pop in, then lift + brand color on hover (from v2) ---------- */
+  .stack { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 10px; max-width: 840px; }
+  @media (min-width: 600px) { .stack { grid-template-columns: repeat(7, minmax(0, 1fr)); } }
+  .tile {
+    position: relative; height: 100%; display: flex; flex-direction: column; align-items: center; gap: 10px;
+    padding: 18px 4px 14px; border: 1px solid var(--line); background: var(--bg-2); color: var(--muted);
+    transition: transform .22s var(--ease), color .2s, border-color .2s;
+  }
+  .tile::after { content: ""; position: absolute; left: -1px; right: -1px; bottom: -1px; height: 2px; background: currentColor; transform: scaleX(0); transition: transform .25s var(--ease); }
+  .tile:hover { transform: translateY(-5px); color: var(--b); border-color: var(--line-2); }
+  .tile:hover::after { transform: scaleX(1); }
+  .ico { width: 30px; height: 30px; display: grid; place-items: center; font: 700 12px/1 var(--mono); }
+  svg.ico { fill: currentColor; }
+  .tile .lbl { font: 12px/1.2 var(--mono); text-align: center; }
+  .anim .stack li { opacity: 0; transform: translateY(14px) scale(.92); }
+  .anim .stack.in li {
+    opacity: 1; transform: none; transition: opacity .4s ease, transform .5s cubic-bezier(.2, .9, .3, 1.35);
+    transition-delay: calc(var(--i) * 45ms);
+  }
+
+  /* ---------- Now ---------- */
+  .now { max-width: 660px; padding: 4px 0 4px 24px; border-left: 2px solid var(--blue); }
+  .now-k { margin: 0 0 14px; color: var(--blue); font-size: 13.5px; }
+  .ticks { list-style: none; margin: 0; padding: 0; }
+  .ticks li { position: relative; margin: 0 0 10px; padding-left: 24px; }
+  .ticks li::before { content: ""; position: absolute; left: 2px; top: .62em; width: 7px; height: 7px; background: var(--blue); }
+  .facts { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 16px; max-width: 780px; margin-top: 48px; }
+  .fact { padding: 20px 22px; border: 1px solid var(--line); background: var(--bg-2); }
+  .fact .mono { margin: 0 0 4px; color: var(--dim); font-size: 12.5px; }
+  .fact p:last-child { margin: 0; color: var(--text); font-size: 16px; }
+
+  /* ---------- About (plain line until the real text is written) ---------- */
+  .soon { margin: 0; color: var(--text); font-size: 19px; }
+
+  /* ---------- Contact ---------- */
+  .contact-h { margin: 0 0 14px; color: var(--text); font-size: clamp(30px, 5vw, 44px); line-height: 1.1; }
+  .contact p { max-width: 560px; margin: 0; }
+  .btns { display: flex; flex-wrap: wrap; gap: 16px; margin-top: 36px; }
+
+  footer { padding: 20px var(--pad) 32px; text-align: center; font: 12.5px/1.7 var(--mono); color: var(--dim); }
+  footer p { margin: 4px 0; }
+  .foot-icons { display: flex; justify-content: center; gap: 8px; list-style: none; margin: 0 0 12px; padding: 0; }
+  .foot-icons a { display: grid; place-items: center; width: 44px; height: 44px; color: var(--muted); transition: color .2s; }
+  .foot-icons a:hover { color: var(--blue); }
+  .foot-icons svg { width: 20px; height: 20px; }
+  @media (min-width: 900px) {
+    footer { padding-left: calc(150px + 44px); }
+    .foot-icons { display: none; }
+  }
+  @media (min-width: 1150px) {
+    footer { padding-left: calc(190px + 72px); }
+  }
+
+  /* Scroll-in reveal (only when the head script added .anim) */
+  .anim .reveal { opacity: 0; transform: translateY(22px); transition: opacity .7s var(--ease), transform .7s var(--ease); }
+  .anim .reveal.in { opacity: 1; transform: none; }
+
+  /* ---------- Smaller screens ---------- */
+  @media (max-width: 899px) {
+    .hero { padding: calc(var(--nav-h) + 70px) 0 60px; }
+    /* The top-bar logo already says JL, so the square by the name only shows once a photo is uploaded */
+    .avatar:not(.has-photo) { display: none; }
+  }
+  @media (max-width: 768px) {
+    :root { --pad: 24px; }
+    .sec { padding: 80px 0; }
+  }
+  @media (max-width: 560px) {
+    .avatar { width: 60px; height: 60px; font-size: 18px; }
+    .who { gap: 16px; }
+  }
+  @media (max-width: 420px) {
+    :root { --pad: 20px; }
+    .sec-h { white-space: normal; }
+    .btn { padding: 15px 22px; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after { transition-duration: .01ms !important; animation: none !important; }
+    .glow { display: none; }
+    .tile:hover { transform: none; }
+  }
+</style>
+</head>
+<body>
+<!-- Icon sprite (Feather Icons, MIT) -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false">
+  <symbol id="i-github" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"/></symbol>
+  <symbol id="i-linkedin" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-4 0v7h-4v-7a6 6 0 0 1 6-6z"/><rect x="2" y="9" width="4" height="12"/><circle cx="4" cy="4" r="2"/></symbol>
+  <symbol id="i-mail" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></symbol>
+  <symbol id="i-lock" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></symbol>
+  <symbol id="i-copy" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></symbol>
+  <!-- Tech icons (Devicon v2.16.0, MIT) -->
+  <symbol id="d-java" viewBox="0 0 128 128"><path d="M47.617 98.12c-19.192 5.362 11.677 16.439 36.115 5.969-4.003-1.556-6.874-3.351-6.874-3.351-10.897 2.06-15.952 2.222-25.844 1.092-8.164-.935-3.397-3.71-3.397-3.71zm33.189-10.46c-14.444 2.779-22.787 2.69-33.354 1.6-8.171-.845-2.822-4.805-2.822-4.805-21.137 7.016 11.767 14.977 41.309 6.336-3.14-1.106-5.133-3.131-5.133-3.131zm11.319-60.575c.001 0-42.731 10.669-22.323 34.187 6.024 6.935-1.58 13.17-1.58 13.17s15.289-7.891 8.269-17.777c-6.559-9.215-11.587-13.793 15.634-29.58zm9.998 81.144s3.529 2.91-3.888 5.159c-14.102 4.272-58.706 5.56-71.095.171-4.45-1.938 3.899-4.625 6.526-5.192 2.739-.593 4.303-.485 4.303-.485-4.952-3.487-32.013 6.85-13.742 9.815 49.821 8.076 90.817-3.637 77.896-9.468zM85 77.896c2.395-1.634 5.703-3.053 5.703-3.053s-9.424 1.685-18.813 2.474c-11.494.964-23.823 1.154-30.012.326-14.652-1.959 8.033-7.348 8.033-7.348s-8.812-.596-19.644 4.644C17.455 81.134 61.958 83.958 85 77.896zm5.609 15.145c-.108.29-.468.616-.468.616 31.273-8.221 19.775-28.979 4.822-23.725-1.312.464-2 1.543-2 1.543s.829-.334 2.678-.72c7.559-1.575 18.389 10.119-5.032 22.286zM64.181 70.069c-4.614-10.429-20.26-19.553.007-35.559C89.459 14.563 76.492 1.587 76.492 1.587c5.23 20.608-18.451 26.833-26.999 39.667-5.821 8.745 2.857 18.142 14.688 28.815zm27.274 51.748c-19.187 3.612-42.854 3.191-56.887.874 0 0 2.874 2.38 17.646 3.331 22.476 1.437 57-.8 57.816-11.436.001 0-1.57 4.032-18.575 7.231z"/></symbol>
+  <symbol id="d-python" viewBox="0 0 128 128"><path d="M49.33 62h29.159C86.606 62 93 55.132 93 46.981V19.183c0-7.912-6.632-13.856-14.555-15.176-5.014-.835-10.195-1.215-15.187-1.191-4.99.023-9.612.448-13.805 1.191C37.098 6.188 35 10.758 35 19.183V30h29v4H23.776c-8.484 0-15.914 5.108-18.237 14.811-2.681 11.12-2.8 17.919 0 29.53C7.614 86.983 12.569 93 21.054 93H31V79.952C31 70.315 39.428 62 49.33 62zm-1.838-39.11c-3.026 0-5.478-2.479-5.478-5.545 0-3.079 2.451-5.581 5.478-5.581 3.015 0 5.479 2.502 5.479 5.581-.001 3.066-2.465 5.545-5.479 5.545zm74.789 25.921C120.183 40.363 116.178 34 107.682 34H97v12.981C97 57.031 88.206 65 78.489 65H49.33C41.342 65 35 72.326 35 80.326v27.8c0 7.91 6.745 12.564 14.462 14.834 9.242 2.717 17.994 3.208 29.051 0C85.862 120.831 93 116.549 93 108.126V97H64v-4h43.682c8.484 0 11.647-5.776 14.599-14.66 3.047-9.145 2.916-17.799 0-29.529zm-41.955 55.606c3.027 0 5.479 2.479 5.479 5.547 0 3.076-2.451 5.579-5.479 5.579-3.015 0-5.478-2.502-5.478-5.579 0-3.068 2.463-5.547 5.478-5.547z"/></symbol>
+  <symbol id="d-c" viewBox="0 0 128 128"><path d="M117.5 33.5l.3-.2c-.6-1.1-1.5-2.1-2.4-2.6L67.1 2.9c-.8-.5-1.9-.7-3.1-.7-1.2 0-2.3.3-3.1.7l-48 27.9c-1.7 1-2.9 3.5-2.9 5.4v55.7c0 1.1.2 2.3.9 3.4l-.2.1c.5.8 1.2 1.5 1.9 1.9l48.2 27.9c.8.5 1.9.7 3.1.7 1.2 0 2.3-.3 3.1-.7l48-27.9c1.7-1 2.9-3.5 2.9-5.4V36.1c.1-.8 0-1.7-.4-2.6zM64 88.5c9.1 0 17.1-5 21.3-12.4l12.9 7.6c-6.8 11.8-19.6 19.8-34.2 19.8-21.8 0-39.5-17.7-39.5-39.5S42.2 24.5 64 24.5c14.7 0 27.5 8.1 34.3 20l-13 7.5C81.1 44.5 73.1 39.5 64 39.5c-13.5 0-24.5 11-24.5 24.5s11 24.5 24.5 24.5z"/></symbol>
+  <symbol id="d-cplusplus" viewBox="0 0 128 128"><path d="M63.443 0c-1.782 0-3.564.39-4.916 1.172L11.594 28.27C8.89 29.828 6.68 33.66 6.68 36.78v54.197c0 1.562.55 3.298 1.441 4.841l-.002.002c.89 1.543 2.123 2.89 3.475 3.672l46.931 27.094c2.703 1.562 7.13 1.562 9.832 0h.002l46.934-27.094c1.352-.78 2.582-2.129 3.473-3.672.89-1.543 1.441-3.28 1.441-4.843V36.779c0-1.557-.55-3.295-1.441-4.838v-.002c-.891-1.545-2.121-2.893-3.473-3.67L68.359 1.173C67.008.39 65.226 0 63.443 0zm.002 26.033c13.465 0 26.02 7.246 32.77 18.91l-16.38 9.479c-3.372-5.836-9.66-9.467-16.39-9.467-10.432 0-18.922 8.49-18.922 18.924S53.013 82.8 63.445 82.8c6.735 0 13.015-3.625 16.395-9.465l16.375 9.477c-6.746 11.662-19.305 18.91-32.77 18.91-20.867 0-37.843-16.977-37.843-37.844s16.976-37.844 37.843-37.844v-.002zM92.881 57.57h4.201v4.207h4.203v4.203h-4.203v4.207h-4.201V65.98h-4.207v-4.203h4.207V57.57zm15.765 0h4.208v4.207h4.203v4.203h-4.203v4.207h-4.208V65.98h-4.205v-4.203h4.205V57.57z"/></symbol>
+  <symbol id="d-bash" viewBox="0 0 128 128"><path d="M109.01 28.64L71.28 6.24c-2.25-1.33-4.77-2-7.28-2s-5.03.67-7.28 2.01l-37.74 22.4c-4.5 2.67-7.28 7.61-7.28 12.96v44.8c0 5.35 2.77 10.29 7.28 12.96l37.73 22.4c2.25 1.34 4.76 2 7.28 2 2.51 0 5.03-.67 7.28-2l37.74-22.4c4.5-2.67 7.28-7.62 7.28-12.96V41.6c0-5.34-2.77-10.29-7.28-12.96zM79.79 98.59l.06 3.22c0 .39-.25.83-.55.99l-1.91 1.1c-.3.15-.56-.03-.56-.42l-.03-3.17c-1.63.68-3.29.84-4.34.42-.2-.08-.29-.37-.21-.71l.69-2.91c.06-.23.18-.46.34-.6.06-.06.12-.1.18-.13.11-.06.22-.07.31-.03 1.14.38 2.59.2 3.99-.5 1.78-.9 2.97-2.72 2.95-4.52-.02-1.64-.9-2.31-3.05-2.33-2.74.01-5.3-.53-5.34-4.57-.03-3.32 1.69-6.78 4.43-8.96l-.03-3.25c0-.4.24-.84.55-1l1.85-1.18c.3-.15.56.04.56.43l.03 3.25c1.36-.54 2.54-.69 3.61-.44.23.06.34.38.24.75l-.72 2.88c-.06.22-.18.44-.33.58a.77.77 0 01-.19.14c-.1.05-.19.06-.28.05-.49-.11-1.65-.36-3.48.56-1.92.97-2.59 2.64-2.58 3.88.02 1.48.77 1.93 3.39 1.97 3.49.06 4.99 1.58 5.03 5.09.05 3.44-1.79 7.15-4.61 9.41zm19.78-5.41c0 .3-.04.58-.29.72l-9.54 5.8c-.25.15-.45.02-.45-.28v-2.46c0-.3.18-.46.43-.61l9.4-5.62c.25-.15.45-.02.45.28v2.17zm6.56-55.09l-35.7 22.05c-4.45 2.6-7.73 5.52-7.74 10.89v43.99c0 3.21 1.3 5.29 3.29 5.9-.65.11-1.32.19-1.98.19-2.09 0-4.15-.57-5.96-1.64l-37.73-22.4c-3.69-2.19-5.98-6.28-5.98-10.67V41.6c0-4.39 2.29-8.48 5.98-10.67l37.74-22.4c1.81-1.07 3.87-1.64 5.96-1.64s4.15.57 5.96 1.64l37.74 22.4c3.11 1.85 5.21 5.04 5.8 8.63-1.27-2.67-4.09-3.39-7.38-1.47z"/></symbol>
+  <symbol id="d-html5" viewBox="0 0 128 128"><path d="M9.032 2l10.005 112.093 44.896 12.401 45.02-12.387L118.968 2H9.032zm89.126 26.539l-.627 7.172L97.255 39H44.59l1.257 14h50.156l-.336 3.471-3.233 36.119-.238 2.27L64 102.609v.002l-.034.018-28.177-7.423L33.876 74h13.815l.979 10.919L63.957 89H64v-.546l15.355-3.875L80.959 67H33.261l-3.383-38.117L29.549 25h68.939l-.33 3.539z"/></symbol>
+  <symbol id="d-fastapi" viewBox="0 0 128 128"><path d="M56.813 127.586c-1.903-.227-3.899-.52-4.434-.652a48.078 48.078 0 00-2.375-.5 36.042 36.042 0 01-2.703-.633c-4.145-1.188-4.442-1.285-7.567-2.563-2.875-1.172-8.172-3.91-9.984-5.156-.496-.344-.96-.621-1.031-.621-.07 0-1.23-.816-2.578-1.813-8.57-6.343-15.004-14.043-19.653-23.527-.8-1.629-1.453-3.074-1.453-3.21 0-.134-.144-.505-.32-.817-.363-.649-.88-2.047-1.297-3.492a20.047 20.047 0 00-.625-1.813c-.195-.46-.352-1.02-.352-1.246 0-.227-.195-.965-.433-1.645-.238-.675-.43-1.472-.43-1.77 0-.296-.187-1.32-.418-2.276C.598 73.492 0 67.379 0 63.953c0-3.422.598-9.535 1.16-11.894.23-.957.418-2 .418-2.32 0-.321.145-.95.32-1.4.18-.448.41-1.253.516-1.788.11-.535.36-1.457.563-2.055l.59-1.726c.433-1.293.835-2.387 1.027-2.813.11-.238.539-1.21.957-2.16.676-1.535 2.125-4.43 2.972-5.945.309-.555.426-.739 2.098-3.352 2.649-4.148 7.176-9.309 11.39-12.988 1.485-1.297 6.446-5.063 6.669-5.063.062 0 .53-.281 1.043-.625 1.347-.902 2.668-1.668 4.39-2.531a53.06 53.06 0 001.836-.953c.285-.164.82-.41 3.567-1.64.605-.27 1.257-.516 3.136-1.173.414-.144 1.246-.449 1.84-.672.598-.222 1.301-.406 1.563-.406.258 0 .937-.18 1.508-.402.57-.223 1.605-.477 2.304-.563.696-.082 1.621-.277 2.055-.43.43-.148 1.61-.34 2.621-.425a72.572 72.572 0 003.941-.465c2.688-.394 8.532-.394 11.192 0a75.02 75.02 0 003.781.445c.953.079 2.168.278 2.703.442.535.16 1.461.36 2.055.433.594.079 1.594.325 2.222.551.63.23 1.344.414 1.59.414s.754.137 1.125.309c.375.168 1.168.449 1.766.625.594.18 1.613.535 2.27.797.652.261 1.527.605 1.945.761.77.29 6.46 3.137 7.234 3.622 6.281 3.917 9.512 6.476 13.856 10.964 5.238 5.414 8.715 10.57 12.254 18.16.25.536.632 1.329.851 1.758.215.434.395.942.395 1.13 0 .19.18.76.402 1.269.602 1.383 1.117 2.957 1.36 4.16.12.59.343 1.32.495 1.621.153.3.332 1.063.403 1.688.07.624.277 1.648.453 2.269 1.02 3.531 1.527 13.934.91 18.535-.183 1.367-.39 3.02-.46 3.672-.118 1.117-.708 4.004-1.212 5.945l-.52 2.055c-.98 3.957-3.402 9.594-6.359 14.809-1.172 2.07-5.101 7.668-5.843 8.324-.067.058-.399.45-.735.863-.336.418-1.414 1.586-2.39 2.594-4.301 4.441-7.77 7.187-13.86 10.969-.722.449-6.847 3.441-7.992 3.906-.594.238-1.586.64-2.203.89-.613.247-1.297.454-1.512.458-.215.003-.781.195-1.258.425-.476.23-1.082.422-1.351.426-.266.004-1.043.192-1.727.418-.683.23-1.633.477-2.11.55-.476.075-1.495.278-2.269.45-.773.172-3.11.508-5.187.746a59.06 59.06 0 01-13.945-.031zm4.703-12.5c.3-.234.609-.7.691-1.027.18-.723 29.234-58.97 29.781-59.7.461-.617.504-1.605.082-1.953-.222-.187-3.004-.246-10.43-.234-5.57.012-10.253.016-10.406.012-.226-.008-.273-3.73-.25-19.672.016-10.817-.035-19.766-.113-19.89-.078-.126-.383-.227-.68-.227-.418 0-.613.18-.87.808-.485 1.168-1.825 3.82-8.348 16.485a3554.569 3554.569 0 00-4.055 7.89c-1.156 2.262-2.98 5.813-4.047 7.89a8751.248 8751.248 0 00-8.598 16.759c-4.933 9.636-5.53 10.785-5.742 11.039-.41.496-.633 1.64-.402 2.07.21.394.629.41 11.043.394 5.953-.007 10.863.024 10.914.07.137.141.086 37.31-.055 38.196-.093.582-.031.89.235 1.156.46.461.586.457 1.25-.066zm0 0"/></symbol>
+  <symbol id="d-redis" viewBox="0 0 128 128"><path d="M6.2 52.7c6.7 3.2 43.7 18.1 49.5 20.9 5.8 2.8 10 2.8 17.4-1 7.4-3.9 42.2-18.1 48.9-21.6 3.4-1.8 4.9-3.2 4.9-4.4V34.1c0-1.3-1.7-2.4-5-3.6-6.5-2.4-41.1-16.1-47.7-18.6-6.6-2.4-9.3-2.3-17.1.5C49.3 15.2 12.6 29.6 6 32.2c-3.2 1.3-5 2.4-5 3.7H.8v12.7c.2 1.2 2.1 2.5 5.4 4.1zm60.4 1.8l-20.3-8.4 29.1-4.5-8.8 12.9zm44.1-20l-17.2 6.8-1.9.7-17.2-6.8 19.1-7.5 17.2 6.8zM60.1 22l-2.8-5.2 8.8 3.4 8.3-2.7-2.2 5.4 8.4 3.2-10.9 1.1-2.4 5.9-3.9-6.5-12.6-1.1 9.3-3.5zm-21.7 7.3c8.6 0 15.6 2.7 15.6 6s-7 6-15.6 6-15.6-2.7-15.6-6 7-6 15.6-6zM122 59.8c-6.7 3.5-41.4 17.8-48.8 21.6-7.4 3.9-11.5 3.8-17.3 1-5.8-2.8-43-17.7-49.6-20.9C2.9 59.9 1 58.6 1 57.3V70c0 1.3 1.9 2.6 5.2 4.2 6.7 3.2 43.7 18.1 49.5 20.9 5.8 2.8 10 2.8 17.4-1 7.4-3.9 42.2-18.1 48.9-21.6 3.4-1.8 4.9-3.2 4.9-4.4V55.6c0 1.1-1.6 2.5-4.9 4.2zm0 20.7c-6.7 3.5-41.4 17.8-48.8 21.6-7.4 3.9-11.5 3.8-17.3 1-5.8-2.8-43-17.7-49.6-20.9C2.9 80.7 1 79.3 1 78v12.7c0 1.3 1.9 2.6 5.2 4.2 6.7 3.2 43.7 18.1 49.5 20.9 5.8 2.8 10 2.8 17.4-1 7.4-3.9 42.2-18.1 48.9-21.6 3.4-1.8 4.9-3.2 4.9-4.4V76.3c0 1.2-1.6 2.5-4.9 4.2z"/></symbol>
+  <symbol id="d-linux" viewBox="0 0 128 128"><path fill-rule="evenodd" clip-rule="evenodd" d="M113.823 104.595c-1.795-1.478-3.629-2.921-5.308-4.525-1.87-1.785-3.045-3.944-2.789-6.678.147-1.573-.216-2.926-2.113-3.452.446-1.154.864-1.928 1.033-2.753.188-.92.178-1.887.204-2.834.264-9.96-3.334-18.691-8.663-26.835-2.454-3.748-5.017-7.429-7.633-11.066-4.092-5.688-5.559-12.078-5.633-18.981a47.564 47.564 0 00-1.081-9.475C80.527 11.956 77.291 7.233 71.422 4.7c-4.497-1.942-9.152-2.327-13.901-1.084-6.901 1.805-11.074 6.934-10.996 14.088.074 6.885.417 13.779.922 20.648.288 3.893-.312 7.252-2.895 10.34-2.484 2.969-4.706 6.172-6.858 9.397-1.229 1.844-2.317 3.853-3.077 5.931-2.07 5.663-3.973 11.373-7.276 16.5-1.224 1.9-1.363 4.026-.494 6.199.225.563.363 1.429.089 1.882-2.354 3.907-5.011 7.345-10.066 8.095-3.976.591-4.172 1.314-4.051 5.413.1 3.337.061 6.705-.28 10.021-.363 3.555.008 4.521 3.442 5.373 7.924 1.968 15.913 3.647 23.492 6.854 3.227 1.365 6.465.891 9.064-1.763 2.713-2.771 6.141-3.855 9.844-3.859 6.285-.005 12.572.298 18.86.369 1.702.02 2.679.653 3.364 2.199.84 1.893 2.26 3.284 4.445 3.526 4.193.462 8.013-.16 11.19-3.359 3.918-3.948 8.436-7.066 13.615-9.227 1.482-.619 2.878-1.592 4.103-2.648 2.231-1.922 2.113-3.146-.135-5zM62.426 24.12c.758-2.601 2.537-4.289 5.243-4.801 2.276-.43 4.203.688 5.639 3.246 1.546 2.758 2.054 5.64.734 8.658-1.083 2.474-1.591 2.707-4.123 1.868-.474-.157-.937-.343-1.777-.652.708-.594 1.154-1.035 1.664-1.382 1.134-.772 1.452-1.858 1.346-3.148-.139-1.694-1.471-3.194-2.837-3.175-1.225.017-2.262 1.167-2.4 2.915-.086 1.089.095 2.199.173 3.589-3.446-1.023-4.711-3.525-3.662-7.118zm-12.75-2.251c1.274-1.928 3.197-2.314 5.101-1.024 2.029 1.376 3.547 5.256 2.763 7.576-.285.844-1.127 1.5-1.716 2.241l-.604-.374c-.23-1.253-.276-2.585-.757-3.733-.304-.728-1.257-1.184-1.919-1.762-.622.739-1.693 1.443-1.757 2.228-.088 1.084.477 2.28.969 3.331.311.661 1.001 1.145 1.713 1.916l-1.922 1.51c-3.018-2.7-3.915-8.82-1.871-11.909zM87.34 86.075c-.203 2.604-.5 2.713-3.118 3.098-1.859.272-2.359.756-2.453 2.964a101.744 101.744 0 00-.012 7.753c.061 1.77-.537 3.158-1.755 4.393-6.764 6.856-14.845 10.105-24.512 8.926-4.17-.509-6.896-3.047-9.097-6.639.98-.363 1.705-.607 2.412-.894 3.122-1.27 3.706-3.955 1.213-6.277-1.884-1.757-3.986-3.283-6.007-4.892-1.954-1.555-3.934-3.078-5.891-4.629-1.668-1.323-2.305-3.028-2.345-5.188-.094-5.182.972-10.03 3.138-14.747 1.932-4.209 3.429-8.617 5.239-12.885.935-2.202 1.906-4.455 3.278-6.388 1.319-1.854 2.134-3.669 1.988-5.94-.084-1.276-.016-2.562-.016-3.843l.707-.352c1.141.985 2.302 1.949 3.423 2.959 4.045 3.646 7.892 3.813 12.319.67 1.888-1.341 3.93-2.47 5.927-3.652.497-.294 1.092-.423 1.934-.738 2.151 5.066 4.262 10.033 6.375 15 1.072 2.524 1.932 5.167 3.264 7.547 2.671 4.775 4.092 9.813 4.07 15.272-.012 2.83.137 5.67-.081 8.482z"/></symbol>
+  <symbol id="d-git" viewBox="0 0 128 128"><path d="M124.742 58.378L69.625 3.264c-3.172-3.174-8.32-3.174-11.497 0L46.685 14.71l14.518 14.518c3.375-1.139 7.243-.375 9.932 2.314a9.66 9.66 0 012.293 9.993L87.42 55.529c3.385-1.167 7.292-.413 9.994 2.295 3.78 3.777 3.78 9.9 0 13.679a9.673 9.673 0 01-13.683 0 9.677 9.677 0 01-2.105-10.521L68.578 47.933l-.002 34.341a9.708 9.708 0 012.559 1.828c3.779 3.777 3.779 9.898 0 13.683-3.779 3.777-9.904 3.777-13.679 0-3.778-3.784-4.088-9.905-.311-13.683.934-.933 1.855-1.638 2.855-2.11V47.333c-1-.472-1.92-1.172-2.856-2.111-2.861-2.86-3.396-7.06-1.928-10.576L40.983 20.333 3.229 58.123c-3.175 3.177-3.155 8.325.02 11.5l55.126 55.114c3.173 3.174 8.325 3.174 11.503 0l54.86-54.858c3.175-3.176 3.178-8.327.004-11.501z"/></symbol>
+  <symbol id="d-github" viewBox="0 0 128 128"><g><path fill-rule="evenodd" clip-rule="evenodd" d="M64 5.103c-33.347 0-60.388 27.035-60.388 60.388 0 26.682 17.303 49.317 41.297 57.303 3.017.56 4.125-1.31 4.125-2.905 0-1.44-.056-6.197-.082-11.243-16.8 3.653-20.345-7.125-20.345-7.125-2.747-6.98-6.705-8.836-6.705-8.836-5.48-3.748.413-3.67.413-3.67 6.063.425 9.257 6.223 9.257 6.223 5.386 9.23 14.127 6.562 17.573 5.02.542-3.903 2.107-6.568 3.834-8.076-13.413-1.525-27.514-6.704-27.514-29.843 0-6.593 2.36-11.98 6.223-16.21-.628-1.52-2.695-7.662.584-15.98 0 0 5.07-1.623 16.61 6.19C53.7 35 58.867 34.327 64 34.304c5.13.023 10.3.694 15.127 2.033 11.526-7.813 16.59-6.19 16.59-6.19 3.287 8.317 1.22 14.46.593 15.98 3.872 4.23 6.215 9.617 6.215 16.21 0 23.194-14.127 28.3-27.574 29.796 2.167 1.874 4.097 5.55 4.097 11.183 0 8.08-.07 14.583-.07 16.572 0 1.607 1.088 3.49 4.148 2.897 23.98-7.994 41.263-30.622 41.263-57.294C124.388 32.14 97.35 5.104 64 5.104z"/><path d="M26.484 91.806c-.133.3-.605.39-1.035.185-.44-.196-.685-.605-.543-.906.13-.31.603-.395 1.04-.188.44.197.69.61.537.91zm2.446 2.729c-.287.267-.85.143-1.232-.28-.396-.42-.47-.983-.177-1.254.298-.266.844-.14 1.24.28.394.426.472.984.17 1.255zM31.312 98.012c-.37.258-.976.017-1.35-.52-.37-.538-.37-1.183.01-1.44.373-.258.97-.025 1.35.507.368.545.368 1.19-.01 1.452zm3.261 3.361c-.33.365-1.036.267-1.552-.23-.527-.487-.674-1.18-.343-1.544.336-.366 1.045-.264 1.564.23.527.486.686 1.18.333 1.543zm4.5 1.951c-.147.473-.825.688-1.51.486-.683-.207-1.13-.76-.99-1.238.14-.477.823-.7 1.512-.485.683.206 1.13.756.988 1.237zm4.943.361c.017.498-.563.91-1.28.92-.723.017-1.308-.387-1.315-.877 0-.503.568-.91 1.29-.924.717-.013 1.306.387 1.306.88zm4.598-.782c.086.485-.413.984-1.126 1.117-.7.13-1.35-.172-1.44-.653-.086-.498.422-.997 1.122-1.126.714-.123 1.354.17 1.444.663zm0 0"/></g></symbol>
+  <symbol id="d-sqlite" viewBox="0 0 128 128"><path d="M115.95 2.781c-5.504-4.906-12.16-2.933-18.738 2.902a47.9 47.9 0 00-2.918 2.856c-11.246 11.93-21.684 34.02-24.926 50.895 1.262 2.563 2.25 5.832 2.902 8.328.325 1.238.617 2.488.875 3.746 0 0-.101-.379-.515-1.578l-.266-.777a8.12 8.12 0 00-.176-.426c-.734-1.707-2.761-5.309-3.656-6.875a172.299 172.299 0 00-2.008 6.27c2.582 4.714 4.149 12.8 4.149 12.8s-.133-.527-.782-2.355c-.57-1.617-3.437-6.637-4.117-7.809-1.16 4.29-1.62 7.18-1.207 7.883.813 1.363 1.578 3.723 2.25 6.324 1.528 5.868 2.586 13.016 2.586 13.016l.094 1.192c-.203 4.886-.102 9.781.297 14.656.508 6.113 1.457 11.359 2.668 14.172l.824-.45c-1.781-5.535-2.504-12.792-2.184-21.155.477-12.79 3.422-28.215 8.856-44.29 9.191-24.261 21.938-43.733 33.602-53.034-10.63 9.601-25.023 40.695-29.332 52.203C79.404 74.162 75.99 86.252 73.93 97.84c3.555-10.863 15.043-15.527 15.043-15.527s5.637-6.954 12.223-16.883c-3.945.898-10.426 2.441-12.598 3.351-3.2 1.34-4.063 1.797-4.063 1.797s10.371-6.312 19.27-9.172c12.234-19.27 25.566-46.645 12.145-58.625M16.896 5.681c-5.398.02-9.77 4.39-9.785 9.789v88.574c.016 5.398 4.39 9.765 9.785 9.785h50.227a122.816 122.816 0 01-.277-14.438c-.031-.332-.059-.754-.086-1.067a143.095 143.095 0 00-2.523-12.684c-.645-2.507-1.465-4.789-1.965-5.636-.621-1.051-.524-1.653-.52-2.305 0-.64.082-1.305.2-2.059.316-1.878.73-3.738 1.246-5.574l1.156-.148c-.09-.188-.074-.348-.164-.516l-.219-2.031c.64-2.137 1.316-4.262 2.04-6.371l1.066-.102c-.043-.082-.055-.203-.098-.28l-.23-1.685c3.363-17.496 13.8-39.699 25.601-52.219.352-.37.711-.683 1.055-1.035z"/></symbol>
+</svg>
+
+<a class="skip" href="#main">Skip to content</a>
+<div class="bg" aria-hidden="true"></div>
+<div class="glow" aria-hidden="true"></div>
+
+<!-- Phones/tablets only: the side tabs move into this menu -->
+<header class="nav" id="nav">
+  <a class="logo" href="#top" aria-label="Jose Lesso, back to top"><span aria-hidden="true">JL</span></a>
+  <button class="menu-btn" type="button" aria-expanded="false" aria-controls="drawer" aria-label="Open menu"><span></span></button>
+</header>
+<aside class="drawer" id="drawer" aria-label="Menu">
+  <nav aria-label="Sections (phone)">
+    <ol>
+      <li><a href="#top"><span class="n">00</span>Intro</a></li>
+      <li><a href="#projects"><span class="n">01</span>Projects</a></li>
+      <li><a href="#skills"><span class="n">02</span>Skills</a></li>
+      <li><a href="#now"><span class="n">03</span>Now</a></li>
+      <li><a href="#about"><span class="n">04</span>About</a></li>
+      <li><a href="#contact"><span class="n">05</span>Contact</a></li>
+    </ol>
+  </nav>
+  <a class="btn" href="Jose_Lesso_Resume.pdf">Resume ↗</a>
+</aside>
+
+<div class="wrap">
+  <aside class="rail" aria-label="Site">
+    <div class="rail-top">
+      <nav aria-label="Sections">
+        <ol>
+          <li><a href="#top"><span class="ln"></span><span class="n">00</span>Intro</a></li>
+          <li><a href="#projects"><span class="ln"></span><span class="n">01</span>Projects</a></li>
+          <li><a href="#skills"><span class="ln"></span><span class="n">02</span>Skills</a></li>
+          <li><a href="#now"><span class="ln"></span><span class="n">03</span>Now</a></li>
+          <li><a href="#about"><span class="ln"></span><span class="n">04</span>About</a></li>
+          <li><a href="#contact"><span class="ln"></span><span class="n">05</span>Contact</a></li>
+        </ol>
+      </nav>
+      <a class="btn btn-sm rail-cv" href="Jose_Lesso_Resume.pdf">Resume ↗</a>
+    </div>
+    <ul class="rail-icons">
+      <li><a href="https://github.com/JLesso" aria-label="GitHub"><svg aria-hidden="true" focusable="false"><use href="#i-github"/></svg></a></li>
+      <li><a href="https://www.linkedin.com/in/jose-lesso" aria-label="LinkedIn"><svg aria-hidden="true" focusable="false"><use href="#i-linkedin"/></svg></a></li>
+      <li><a href="mailto:jose.lesso1313@gmail.com" aria-label="Email"><svg aria-hidden="true" focusable="false"><use href="#i-mail"/></svg></a></li>
+    </ul>
+  </aside>
+
+  <main id="main">
+    <section class="hero" id="top" aria-label="Intro">
+      <p class="hero-k"><span aria-hidden="true">$ whoami</span><span class="sr">Hi, my name is</span></p>
+      <div class="who">
+        <div class="avatar"><span aria-hidden="true">JL</span><img src="photo.jpg" alt="Photo of Jose Lesso" width="76" height="76" onload="this.parentNode.classList.add('has-photo')" onerror="this.remove()"></div>
+        <h1>Jose Lesso</h1>
+      </div>
+      <!-- Headline (picked by Jose, 2026-10-27) -->
+      <p class="hero-line">Breaking things on purpose, so they don’t break by accident.</p>
+      <p class="hero-p">I'm a computer science student at Sacramento State (B.S., expected May 2028). Lately I've been building networking projects in Java and studying for Security+.</p>
+      <div class="hero-cta"><a class="btn" href="#projects">See my projects</a></div>
+    </section>
+
+    <section class="sec" id="projects" aria-labelledby="projects-h">
+      <h2 class="sec-h reveal" id="projects-h"><span class="c">// 01</span>Projects</h2>
+      <ul class="projects">
+
+        <li class="proj reveal">
+          <div class="proj-viz">
+            <div class="viz tilt" role="img" aria-label="Diagram of PoliScan: Form 700 holdings and Legistar votes go into the FastAPI backend, which checks only the items each official voted for, runs a cached LLM check, and flags votes tied to a holding.">
+              <p class="viz-k">// how it works</p>
+              <img class="shot" src="poliscan.png" alt="" onerror="this.remove()">
+              <div class="ps">
+                <div class="ps-row">
+                  <div class="nd">Form 700<small>financial holdings</small></div>
+                  <div class="nd">Legistar API<small>agendas + votes</small></div>
+                </div>
+                <div class="vl"></div>
+                <div class="nd hot wide">FastAPI backend<small>checks only items each official voted for</small><small class="tag">26% fewer LLM calls</small></div>
+                <div class="vl"></div>
+                <div class="ps-row">
+                  <div class="nd">LLM check<small>Ollama, cached</small></div>
+                  <div class="ar"></div>
+                  <div class="nd">flag<small>vote tied to a holding</small></div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="proj-body">
+            <p class="kicker">Team project · Spring 2026</p>
+            <h3 class="proj-title"><a href="https://github.com/ohmrr/poli-scan">PoliScan</a></h3>
+            <p class="proj-desc">A tool, built for the California Fair Political Practices Commission, that flags officials who vote on agenda items tied to their own financial holdings. On a team of 5, I developed the FastAPI backend and cut LLM calls by 26% by checking only the items each official voted for.</p>
+            <ul class="proj-tech" aria-label="Built with"><li>Python</li><li>FastAPI</li><li>SQLite (Turso)</li><li>Ollama</li></ul>
+            <div class="proj-links"><a href="https://github.com/ohmrr/poli-scan" aria-label="PoliScan source code on GitHub"><svg aria-hidden="true" focusable="false"><use href="#i-github"/></svg></a></div>
+          </div>
+        </li>
+
+        <li class="proj reveal">
+          <div class="proj-viz">
+            <div class="viz tilt" role="img" aria-label="Diagram of the gateway: a client sends HTTP/1.1 to the gateway, which talks to four services: Time over RFC 868, WHOIS for the caller's tier, Redis over RESP2 for rate-limit counters, and a JSON chat API.">
+              <p class="viz-k">// how it works</p>
+              <div class="gw">
+                <div class="nd ghost">client</div>
+                <div class="ar"><span>HTTP/1.1</span></div>
+                <div class="nd hot">gateway<small>Java 21</small></div>
+                <div class="fan">
+                  <div class="nd">Time<small>RFC 868</small></div>
+                  <div class="nd">WHOIS<small>caller's tier</small></div>
+                  <div class="nd">Redis<small>RESP2 · INCR</small></div>
+                  <div class="nd">Chat<small>JSON API</small></div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="proj-body">
+            <p class="kicker">Networking project · Sep 2026</p>
+            <h3 class="proj-title">Multi-Protocol API Gateway</h3>
+            <p class="proj-desc">An HTTP/1.1 gateway written in Java with no frameworks. For each request it talks to 4 backend services over 4 different wire protocols, and it enforces per-user rate limits with atomic Redis <code>INCR</code> counters.</p>
+            <ul class="proj-tech" aria-label="Built with"><li>Java 21</li><li>TCP sockets</li><li>HTTP/1.1</li><li>Redis</li></ul>
+            <div class="proj-links"><span class="private"><svg aria-hidden="true" focusable="false"><use href="#i-lock"/></svg>Code private until Jan 2027</span></div>
+          </div>
+        </li>
+
+        <li class="proj reveal">
+          <div class="proj-viz">
+            <div class="viz tilt" role="img" aria-label="Diagram of Go-Back-N: packets 0 to 3 are acknowledged, packets 4 to 8 are in the sending window, packet 6 was dropped by the proxy, and 3 duplicate ACKs trigger a fast retransmit of packet 6.">
+              <p class="viz-k">// how it works</p>
+              <div class="udp">
+                <div class="pk">
+                  <i class="p a">0</i><i class="p a">1</i><i class="p a">2</i><i class="p a">3</i>
+                  <i class="p f">4</i><i class="p f">5</i><i class="p x">6</i><i class="p f">7</i><i class="p f">8</i>
+                  <i class="p">9</i><i class="p">10</i><i class="p">11</i>
+                  <span class="win"><span>window</span></span>
+                </div>
+                <p class="udp-note">3 duplicate ACKs → fast retransmit <b>#6</b></p>
+                <ul class="lg">
+                  <li><i class="p a"></i>acked</li>
+                  <li><i class="p f"></i>in flight</li>
+                  <li><i class="p x"></i>dropped by proxy</li>
+                  <li><i class="p"></i>not sent yet</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+          <div class="proj-body">
+            <p class="kicker">Networking project · Oct 2026</p>
+            <h3 class="proj-title">Reliable File Transfer over UDP</h3>
+            <p class="proj-desc">A Go-Back-N sender that delivers files reliably over UDP, through a proxy that delays and drops packets. It adds TCP-style congestion control and adaptive timeouts (Jacobson/Karels RTT estimation and Karn's algorithm).</p>
+            <ul class="proj-tech" aria-label="Built with"><li>Java</li><li>UDP</li><li>Sliding window</li><li>Congestion control</li></ul>
+            <div class="proj-links"><span class="private"><svg aria-hidden="true" focusable="false"><use href="#i-lock"/></svg>Code private until Jan 2027</span></div>
+          </div>
+        </li>
+
+        <li class="proj reveal">
+          <div class="proj-viz">
+            <div class="viz tilt" role="img" aria-label="Diagram of the homelab: a spare laptop runs Proxmox, with Pi-hole in an LXC container serving DNS to home devices and an LLM agent that sends a daily digest to Telegram.">
+              <p class="viz-k">// how it works</p>
+              <div class="lab">
+                <div class="host"></div>
+                <p class="lab-k">Proxmox · spare laptop</p>
+                <div class="nd hot in r1">Pi-hole<small>LXC container</small></div>
+                <div class="ar r1"><span>DNS</span></div>
+                <div class="nd ghost r1">home devices</div>
+                <div class="nd in r2">LLM agent<small>scheduled jobs</small></div>
+                <div class="ar r2"><span>daily digest</span></div>
+                <div class="nd ghost r2">Telegram</div>
+              </div>
+            </div>
+          </div>
+          <div class="proj-body">
+            <p class="kicker">Personal project · Jun 2026</p>
+            <h3 class="proj-title">Homelab</h3>
+            <p class="proj-desc">Proxmox on a spare laptop, with Pi-hole in an LXC container as the DNS server for home devices. It also hosted an LLM agent that ran scheduled jobs and sent daily digests to Telegram.</p>
+            <ul class="proj-tech" aria-label="Built with"><li>Proxmox</li><li>Linux</li><li>LXC</li><li>DNS</li></ul>
+          </div>
+        </li>
+
+      </ul>
+    </section>
+
+    <section class="sec" id="skills" aria-labelledby="skills-h">
+      <h2 class="sec-h reveal" id="skills-h"><span class="c">// 02</span>Skills</h2>
+      <ul class="stack" aria-label="Technologies I use">
+        <li style="--i:0;--b:#f89820"><div class="tile"><svg class="ico" aria-hidden="true" focusable="false"><use href="#d-java"/></svg><span class="lbl">Java</span></div></li>
+        <li style="--i:1;--b:#ffd845"><div class="tile"><svg class="ico" aria-hidden="true" focusable="false"><use href="#d-python"/></svg><span class="lbl">Python</span></div></li>
+        <li style="--i:2;--b:#5ba4ff"><div class="tile"><span class="ico" aria-hidden="true"><svg viewBox="0 0 24 24" width="28" height="28" fill="none" stroke="currentColor" stroke-width="1.8"><ellipse cx="12" cy="5" rx="8" ry="3"/><path d="M4 5v14c0 1.66 3.58 3 8 3s8-1.34 8-3V5M4 12c0 1.66 3.58 3 8 3s8-1.34 8-3"/></svg></span><span class="lbl">SQL</span></div></li>
+        <li style="--i:3;--b:#a8b9cc"><div class="tile"><svg class="ico" aria-hidden="true" focusable="false"><use href="#d-c"/></svg><span class="lbl">C</span></div></li>
+        <li style="--i:4;--b:#659ad2"><div class="tile"><svg class="ico" aria-hidden="true" focusable="false"><use href="#d-cplusplus"/></svg><span class="lbl">C++</span></div></li>
+        <li style="--i:5;--b:#4eaa25"><div class="tile"><svg class="ico" aria-hidden="true" focusable="false"><use href="#d-bash"/></svg><span class="lbl">Bash</span></div></li>
+        <li style="--i:6;--b:#e44d26"><div class="tile"><svg class="ico" aria-hidden="true" focusable="false"><use href="#d-html5"/></svg><span class="lbl">HTML/CSS</span></div></li>
+        <li style="--i:7;--b:#05998b"><div class="tile"><svg class="ico" aria-hidden="true" focusable="false"><use href="#d-fastapi"/></svg><span class="lbl">FastAPI</span></div></li>
+        <li style="--i:8;--b:#ff4438"><div class="tile"><svg class="ico" aria-hidden="true" focusable="false"><use href="#d-redis"/></svg><span class="lbl">Redis</span></div></li>
+        <li style="--i:9;--b:#fcc624"><div class="tile"><svg class="ico" aria-hidden="true" focusable="false"><use href="#d-linux"/></svg><span class="lbl">Linux</span></div></li>
+        <li style="--i:10;--b:#f05032"><div class="tile"><svg class="ico" aria-hidden="true" focusable="false"><use href="#d-git"/></svg><span class="lbl">Git</span></div></li>
+        <li style="--i:11;--b:#f0f6fc"><div class="tile"><svg class="ico" aria-hidden="true" focusable="false"><use href="#d-github"/></svg><span class="lbl">GitHub</span></div></li>
+        <li style="--i:12;--b:#3d9be0"><div class="tile"><svg class="ico" aria-hidden="true" focusable="false"><use href="#d-sqlite"/></svg><span class="lbl">SQLite</span></div></li>
+        <li style="--i:13;--b:#e57000"><div class="tile"><span class="ico" aria-hidden="true">PVE</span><span class="lbl">Proxmox</span></div></li>
+      </ul>
+    </section>
+
+    <section class="sec" id="now" aria-labelledby="now-h">
+      <h2 class="sec-h reveal" id="now-h"><span class="c">// 03</span>Now</h2>
+      <div class="now reveal">
+        <p class="now-k mono">// updated October 2026</p>
+        <ul class="ticks">
+          <li>Studying for CompTIA Security+</li>
+          <li>Working through PortSwigger Web Security Academy labs (access control so far)</li>
+          <li>Up next: a routing project (Dijkstra's algorithm) for my networks class</li>
+          <li>Applying for summer 2027 internships</li>
+        </ul>
+      </div>
+      <div class="facts reveal">
+        <div class="fact"><p class="mono">school</p><p>B.S. Computer Science, Sacramento State · expected May 2028</p></div>
+        <div class="fact"><p class="mono">work</p><p>Part-time job while studying full-time</p></div>
+      </div>
+    </section>
+
+    <section class="sec" id="about" aria-labelledby="about-h">
+      <h2 class="sec-h reveal" id="about-h"><span class="c">// 04</span>About</h2>
+      <p class="soon reveal">Coming soon.</p>
+    </section>
+
+    <section class="sec contact reveal" id="contact" aria-labelledby="contact-h">
+      <h2 class="sec-h" id="contact-h"><span class="c">// 05</span>Contact</h2>
+      <h3 class="contact-h">Let's talk.</h3>
+      <p>I'm applying for summer 2027 internships, especially backend and application security roles. Email is the best way to reach me.</p>
+      <div class="btns">
+        <a class="btn" href="mailto:jose.lesso1313@gmail.com">Say hello</a>
+        <button class="btn" type="button" id="copy"><svg aria-hidden="true" focusable="false"><use href="#i-copy"/></svg><span class="lbl">Copy email</span></button>
+      </div>
+      <p class="sr" id="copy-status" role="status" aria-live="polite"></p>
+    </section>
+  </main>
+</div>
+
+<footer>
+  <ul class="foot-icons">
+    <li><a href="https://github.com/JLesso" aria-label="GitHub"><svg aria-hidden="true" focusable="false"><use href="#i-github"/></svg></a></li>
+    <li><a href="https://www.linkedin.com/in/jose-lesso" aria-label="LinkedIn"><svg aria-hidden="true" focusable="false"><use href="#i-linkedin"/></svg></a></li>
+    <li><a href="mailto:jose.lesso1313@gmail.com" aria-label="Email"><svg aria-hidden="true" focusable="false"><use href="#i-mail"/></svg></a></li>
+  </ul>
+  <p>Last updated October 2026.</p>
+</footer>
+
+<script>
+(function () {
+  "use strict";
+  var root = document.documentElement;
+  var still = matchMedia("(prefers-reduced-motion: reduce)").matches;
+  var fine = matchMedia("(hover: hover) and (pointer: fine)").matches;
+
+  // ---- Scroll-in reveal (sections) + skill tiles pop-in
+  if (root.classList.contains("anim")) {
+    var io = new IntersectionObserver(function (entries) {
+      entries.forEach(function (en) {
+        if (en.isIntersecting) { en.target.classList.add("in"); io.unobserve(en.target); }
+      });
+    }, { threshold: 0.1, rootMargin: "0px 0px -40px 0px" });
+    document.querySelectorAll(".reveal, .stack").forEach(function (el) { io.observe(el); });
+  }
+  window.__revealReady = true;
+
+  // ---- Scroll spy: the active side tab pops out; the phone top bar hides on scroll down
+  var nav = document.getElementById("nav");
+  var lastY = scrollY;
+  var queued = false;
+  var ids = ["top", "projects", "skills", "now", "about", "contact"];
+  var secs = ids.map(function (id) { return document.getElementById(id); });
+  var tabLinks = Array.prototype.slice.call(document.querySelectorAll(".rail nav a, .drawer nav a"));
+
+  function spy() {
+    var line = innerHeight * 0.35, cur = "top";
+    secs.forEach(function (s) { if (s.getBoundingClientRect().top <= line) cur = s.id; });
+    if (innerHeight + scrollY >= root.scrollHeight - 2) cur = "contact";
+    tabLinks.forEach(function (a) {
+      var on = a.getAttribute("href") === "#" + cur;
+      a.classList.toggle("on", on);
+      if (on) a.setAttribute("aria-current", "location"); else a.removeAttribute("aria-current");
+    });
+  }
+  function onScroll() {
+    queued = false;
+    var y = scrollY;
+    nav.classList.toggle("scrolled", y > 20);
+    if (!document.body.classList.contains("menu-open") && !nav.contains(document.activeElement)) {
+      if (y > lastY && y > 120) nav.classList.add("hide");
+      else if (y < lastY) nav.classList.remove("hide");
+    }
+    lastY = y;
+    spy();
+  }
+  addEventListener("scroll", function () {
+    if (!queued) { queued = true; requestAnimationFrame(onScroll); }
+  }, { passive: true });
+  nav.addEventListener("focusin", function () { nav.classList.remove("hide"); });
+  onScroll();
+
+  // ---- Phone menu
+  var menuBtn = nav.querySelector(".menu-btn");
+  var drawer = document.getElementById("drawer");
+  var behind = [document.querySelector(".wrap"), document.querySelector("footer")];
+  function setMenu(open) {
+    menuBtn.setAttribute("aria-expanded", String(open));
+    menuBtn.setAttribute("aria-label", open ? "Close menu" : "Open menu");
+    drawer.classList.toggle("open", open);
+    document.body.classList.toggle("menu-open", open);
+    behind.forEach(function (el) {
+      if (open) el.setAttribute("inert", ""); else el.removeAttribute("inert");
+    });
+    if (open) {
+      nav.classList.remove("hide");
+      var first = drawer.querySelector("a");
+      if (first) first.focus();
+    }
+  }
+  menuBtn.addEventListener("click", function () {
+    setMenu(menuBtn.getAttribute("aria-expanded") !== "true");
+  });
+  drawer.addEventListener("click", function (e) {
+    if (e.target.closest("a")) setMenu(false);
+  });
+  document.addEventListener("keydown", function (e) {
+    if (e.key === "Escape" && drawer.classList.contains("open")) { setMenu(false); menuBtn.focus(); }
+  });
+  var wide = matchMedia("(min-width: 900px)");
+  function closeIfWide() { if (wide.matches && drawer.classList.contains("open")) setMenu(false); }
+  if (wide.addEventListener) wide.addEventListener("change", closeIfWide);
+  else if (wide.addListener) wide.addListener(closeIfWide);
+
+  // ---- Copy email
+  var EMAIL = "jose.lesso1313@gmail.com";
+  var copyBtn = document.getElementById("copy");
+  var copyLbl = copyBtn.querySelector(".lbl");
+  var copyStatus = document.getElementById("copy-status");
+  var resetTimer = null;
+  function copied(ok) {
+    copyLbl.textContent = ok ? "Copied!" : EMAIL;
+    copyStatus.textContent = ok ? "Email copied to clipboard." : "Could not copy. The email is " + EMAIL + ".";
+    clearTimeout(resetTimer);
+    resetTimer = setTimeout(function () { copyLbl.textContent = "Copy email"; }, ok ? 2000 : 6000);
+  }
+  function copyFallback() {
+    var t = document.createElement("textarea");
+    t.value = EMAIL;
+    t.setAttribute("readonly", "");
+    t.style.position = "fixed";
+    t.style.opacity = "0";
+    document.body.appendChild(t);
+    t.select();
+    var ok = false;
+    try { ok = document.execCommand("copy"); } catch (err) { ok = false; }
+    document.body.removeChild(t);
+    copied(ok);
+  }
+  copyBtn.addEventListener("click", function () {
+    if (navigator.clipboard && window.isSecureContext) {
+      navigator.clipboard.writeText(EMAIL).then(function () { copied(true); }, copyFallback);
+    } else {
+      copyFallback();
+    }
+  });
+
+  if (still || !fine) return; // reduced motion or touch: no mouse light, no tilt
+
+  // ---- Mouse-following light
+  var glow = document.querySelector(".glow");
+  var gx = 0, gy = 0, gq = false;
+  addEventListener("pointermove", function (e) {
+    gx = e.clientX; gy = e.clientY;
+    if (gq) return;
+    gq = true;
+    requestAnimationFrame(function () {
+      gq = false;
+      glow.style.setProperty("--mx", gx + "px");
+      glow.style.setProperty("--my", gy + "px");
+      glow.classList.add("on");
+    });
+  }, { passive: true });
+  root.addEventListener("mouseleave", function () { glow.classList.remove("on"); });
+
+  // ---- Diagram tilt: leans toward the cursor, eased each frame (from v2)
+  var MAX = 5; // degrees
+  document.querySelectorAll(".tilt").forEach(function (el) {
+    var tx = 0, ty = 0, cx = 0, cy = 0, raf = 0;
+    function step() {
+      cx += (tx - cx) * 0.14; cy += (ty - cy) * 0.14;
+      if (Math.abs(tx - cx) < 0.01 && Math.abs(ty - cy) < 0.01) {
+        cx = tx; cy = ty; raf = 0;
+      } else {
+        raf = requestAnimationFrame(step);
+      }
+      el.style.transform = (cx || cy) ? "perspective(900px) rotateX(" + cy.toFixed(2) + "deg) rotateY(" + cx.toFixed(2) + "deg)" : "";
+    }
+    function kick() { if (!raf) raf = requestAnimationFrame(step); }
+    el.addEventListener("pointermove", function (e) {
+      if (e.pointerType !== "mouse") return;
+      var r = el.getBoundingClientRect();
+      var px = (e.clientX - r.left) / r.width - 0.5, py = (e.clientY - r.top) / r.height - 0.5;
+      tx = px * MAX * 2; ty = -py * MAX * 2;
+      el.style.setProperty("--px", (px + 0.5) * 100 + "%");
+      el.style.setProperty("--py", (py + 0.5) * 100 + "%");
+      kick();
+    });
+    el.addEventListener("pointerleave", function () { tx = 0; ty = 0; kick(); });
+  });
+})();
+</script>
+</body>
+</html>
